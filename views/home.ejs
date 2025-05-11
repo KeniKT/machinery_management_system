@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Home | Machinery Management</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+  <style>
+    .offcanvas-start {
+      background-color: rgb(198, 198, 235) !important;
+      color: white;
+    }
+    .offcanvas-start .btn-close {
+      color: white;
+    }
+    .home-banner {
+      width: 100%;
+      height: 250px;
+      object-fit: cover;
+      border-radius: 8px;
+    }
+    .home-buttons {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Offcanvas Drawer -->
+  <div class="offcanvas offcanvas-start" tabindex="-1" id="leftDrawer" aria-labelledby="leftDrawerLabel">
+    <div class="offcanvas-header">
+      <h5 id="leftDrawerLabel">Machinery Menu</h5>
+      <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body">
+      <ul class="nav flex-column">
+        <li class="nav-item">
+          <a class="nav-link active" href="/">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/machines/new">Add New Machine</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/machines">View Machines</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="container mt-5 text-center">
+    <!-- Hamburger Menu Button -->
+    <button 
+      class="btn btn-primary position-fixed top-0 start-0 m-3 z-3" 
+      type="button" 
+      data-bs-toggle="offcanvas" 
+      data-bs-target="#leftDrawer" 
+      aria-controls="leftDrawer"
+      style="border-radius: 50%; width: 50px; height: 50px;">
+      <i class="fas fa-bars"></i>
+    </button>
+
+    <img src="/images/banner.png" alt="Banner" class="home-banner mb-4">
+
+    <h1 class="mb-3">Welcome to the Machinery Management System</h1>
+    <p class="lead mb-4">Streamline your equipment tracking, maintenance, and monitoring — all from one place.</p>
+
+    <div class="home-buttons">
+      <a href="/machines" class="btn btn-primary btn-lg">View Machines</a>
+      <a href="/machines/new" class="btn btn-success btn-lg">Add New Machine</a>
+    </div>
+
+    <!-- Features Section -->
+    <div class="mt-5 text-start">
+      <h3 class="mb-3">🔧 Core Features</h3>
+      <ul class="list-group mb-4">
+        <li class="list-group-item">📋 <strong>Machinery Inventory</strong> – Track machinery name, type, and status.</li>
+        <li class="list-group-item">🛠 <strong>Maintenance Tracking</strong> – Schedule and log maintenance operations.</li>
+        <li class="list-group-item">📊 <strong>Performance Monitoring</strong> – Analyze usage and downtime data.</li>
+        <li class="list-group-item">👷 <strong>Operator Logs</strong> – Assign and record machinery usage by operator.</li>
+        <li class="list-group-item">📁 <strong>Document Management</strong> – Store manuals, certificates, and records.</li>
+      </ul>
+
+      <h3 class="mb-3">✅ Benefits</h3>
+      <ul class="list-group">
+        <li class="list-group-item">✔ Reduce downtime and repair costs with proactive management.</li>
+        <li class="list-group-item">✔ Improve operational efficiency and machinery lifespan.</li>
+        <li class="list-group-item">✔ Ensure safety, compliance, and easy access to machine history.</li>
+        <li class="list-group-item">✔ Make informed decisions using real-time insights.</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
