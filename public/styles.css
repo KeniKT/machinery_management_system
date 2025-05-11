@@ -1,0 +1,11 @@
+/* Custom CSS for Drawer Background */
+.offcanvas-start {
+    background-color: gray !important; /* Force the gray background color */
+    color: white; /* Change text color to white for better readability (optional) */
+  }
+  
+  /* Optional: Adjust the color of the close button if it's hard to see on gray */
+  .offcanvas-start .btn-close {
+    color: white;
+  }
+  
