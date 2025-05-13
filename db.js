@@ -11,6 +11,17 @@ db.serialize(() => {
       status TEXT NOT NULL
     )
   `);
+ // Maintenance table
+  db.run(`
+    CREATE TABLE IF NOT EXISTS maintenance (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      machine_id INTEGER NOT NULL,
+      date TEXT NOT NULL,
+      description TEXT NOT NULL,
+      performed_by TEXT NOT NULL,
+      FOREIGN KEY (machine_id) REFERENCES machines(id)
+    )
+  `);
 });
 
 module.exports = db;
