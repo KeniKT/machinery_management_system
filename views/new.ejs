@@ -1,28 +1,84 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Add New Machine</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      background: linear-gradient(to bottom right, #1e2a38, #2d3e50); /* Blue-black gradient */
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .container {
+      background-color: #ffffff;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+      max-width: 600px;
+      width: 100%;
+    }
+
+    h1 {
+      font-size: 2.2rem;
+      font-weight: bold;
+      color: #1b3c6b;
+    }
+
+    .form-label {
+      font-weight: bold;
+      color: #333;
+    }
+
+    button {
+      width: 100%;
+    }
+
+    .btn-cancel {
+      width: 100%;
+      margin-top: 10px;
+    }
+
+    @media (max-width: 576px) {
+      .container {
+        padding: 20px;
+      }
+
+      h1 {
+        font-size: 1.8rem;
+      }
+    }
+  </style>
 </head>
 <body>
-  <div class="container mt-5">
-    <h1 class="mb-4">Add New Machine</h1>
+
+  <div class="container">
+    <h1 class="text-center mb-4">Add New Machine</h1>
+
     <form action="/machines" method="POST">
       <div class="mb-3">
-        <label class="form-label">Name:</label>
-        <input class="form-control" type="text" name="name" required>
+        <label class="form-label" for="name">Machine Name:</label>
+        <input class="form-control" type="text" name="name" id="name" required placeholder="Enter machine name">
       </div>
+
       <div class="mb-3">
-        <label class="form-label">Type:</label>
-        <input class="form-control" type="text" name="type" required>
+        <label class="form-label" for="type">Machine Type:</label>
+        <input class="form-control" type="text" name="type" id="type" required placeholder="Enter machine type">
       </div>
+
       <div class="mb-3">
-        <label class="form-label">Status:</label>
-        <input class="form-control" type="text" name="status" required>
+        <label class="form-label" for="status">Machine Status:</label>
+        <input class="form-control" type="text" name="status" id="status" required placeholder="Enter machine status">
       </div>
-      <button class="btn btn-success" type="submit">Add Machine</button>
-      <a href="/machines" class="btn btn-secondary ms-2">Cancel</a>
+
+      <button class="btn btn-success mb-2" type="submit">Add Machine</button>
+      <a href="/machines" class="btn btn-secondary btn-cancel">Cancel</a>
     </form>
   </div>
+
 </body>
 </html>

@@ -90,3 +90,39 @@ app.delete('/machines/:id', (req, res) => {
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
 });
+
+// View all maintenance records
+app.get('/maintenance', (req, res) => {
+  const sql = `
+    SELECT m.*, machines.name AS machine_name 
+    FROM maintenance m 
+    JOIN machines ON m.machine_id = machines.id
+  `;
+  db.all(sql, (err, maintenanceRecords) => {
+    if (err) return res.status(500).send('Database error');
+    res.render('maintenance', { maintenanceRecords });
+  });
+});
+
+// Show form to add new maintenance
+app.get('/maintenance/new', (req, res) => {
+  db.all('SELECT id, name FROM machines', (err, machines) => {
+    if (err) return res.status(500).send('Database error');
+    res.render('new_maintenance', { machines });
+  });
+});
+
+// Handle new maintenance form submission
+app.post('/maintenance', (req, res) => {
+  const { machine_id, date, description, performed_by } = req.body;
+  db.run(`
+    INSERT INTO maintenance (machine_id, date, description, performed_by)
+    VALUES (?, ?, ?, ?)`, 
+    [machine_id, date, description, performed_by],
+    (err) => {
+      if (err) return res.status(500).send('Database error');
+      res.redirect('/maintenance');
+    }
+  );
+});
+
