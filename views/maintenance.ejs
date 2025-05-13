@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Maintenance Records</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+
+  <style>
+    body {
+      background: linear-gradient(to bottom right, #1e2a38, #2d3e50);
+      color: #ffffff;
+      min-height: 100vh;
+    }
+
+    .container {
+      background-color: #ffffff;
+      color: #000000;
+      padding: 40px;
+      border-radius: 12px;
+      margin-top: 50px;
+      margin-bottom: 50px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
+      min-height: 80vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    h1 {
+      color: #1b3c6b;
+      font-weight: bold;
+    }
+
+    .table thead {
+      background-color: #1b3c6b;
+      color: white;
+    }
+
+    .table td, .table th {
+      vertical-align: middle;
+    }
+
+    .btn-primary {
+      background-color: #1b3c6b;
+      border: none;
+    }
+
+    .btn-primary:hover {
+      background-color: #324a74;
+    }
+
+    .back-home-btn {
+      background: linear-gradient(to right, #1b3c6b, #2d3e50);
+      color: #fff;
+      border: none;
+      padding: 10px 18px;
+      border-radius: 8px;
+      font-weight: 500;
+      transition: background 0.3s ease;
+      text-decoration: none;
+    }
+
+    .back-home-btn:hover {
+      background: linear-gradient(to right, #324a74, #3a506b);
+      color: #ffffff;
+      text-decoration: none;
+    }
+
+    .bottom-buttons {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 30px;
+    }
+
+    .alert {
+      font-weight: bold;
+    }
+
+    .add-btn {
+      padding-left: 24px;
+      padding-right: 24px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div>
+      <h1 class="mb-4">🛠 Maintenance Records</h1>
+
+      <% if (maintenanceRecords.length === 0) { %>
+        <div class="alert alert-warning">No maintenance records found.</div>
+      <% } else { %>
+        <div class="table-responsive mb-4">
+          <table class="table table-bordered table-hover">
+            <thead class="table-light">
+              <tr>
+                <th>Machine</th>
+                <th>Date</th>
+                <th>Description</th>
+                <th>Performed By</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% maintenanceRecords.forEach(record => { %>
+                <tr>
+                  <td><%= record.machine_name %></td>
+                  <td><%= record.date %></td>
+                  <td><%= record.description %></td>
+                  <td><%= record.performed_by %></td>
+                </tr>
+              <% }) %>
+            </tbody>
+          </table>
+        </div>
+      <% } %>
+    </div>
+
+    <!-- Buttons moved below -->
+    <div class="bottom-buttons">
+      <a href="/" class="back-home-btn">
+        <i class="fas fa-arrow-left"></i> Back to Home
+      </a>
+      <a href="/maintenance/new" class="btn btn-primary add-btn">
+        <i class="fas fa-plus"></i> Add Maintenance
+      </a>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
