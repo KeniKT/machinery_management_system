@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Assign Machine</title>
+  <link rel="stylesheet" href="/styles.css">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 600px;
+      margin: 40px auto;
+      padding: 20px;
+      background-color: #f9f9f9;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    label {
+      display: block;
+      margin-top: 20px;
+      font-weight: bold;
+    }
+
+    select, button {
+      width: 100%;
+      padding: 10px;
+      margin-top: 8px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    button {
+      background-color: #007BFF;
+      color: white;
+      cursor: pointer;
+      margin-top: 30px;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    a {
+      display: block;
+      margin-top: 20px;
+      text-align: center;
+      color: #007BFF;
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <h1>Assign Machine to Technician</h1>
+
+  <form action="/assign" method="POST">
+    <label for="machine_id">Select Machine:</label>
+    <select name="machine_id" id="machine_id" required>
+      <% machines.forEach(machine => { %>
+        <option value="<%= machine.id %>"><%= machine.name %></option>
+      <% }) %>
+    </select>
+
+    <label for="user_id">Select Technician:</label>
+    <select name="user_id" id="user_id" required>
+      <% users.forEach(user => { %>
+        <option value="<%= user.id %>"><%= user.username %></option>
+      <% }) %>
+    </select>
+
+    <button type="submit">Assign</button>
+  </form>
+
+  <a href="/home">← Back to Home</a>
+</body>
+</html>

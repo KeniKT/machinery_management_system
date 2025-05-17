@@ -106,10 +106,17 @@
       margin-bottom: 5px;
     }
 
-    .login-btn {
+    /* Updated login buttons container */
+    .login-btns {
       position: absolute;
       top: 20px;
       right: 30px;
+      display: flex;
+      gap: 12px;
+      z-index: 10;
+    }
+
+    .login-btn {
       background: #0d6efd;
       color: white;
       font-weight: 600;
@@ -117,9 +124,10 @@
       border: none;
       border-radius: 8px;
       text-decoration: none;
-      z-index: 10;
       transition: all 0.3s ease;
       box-shadow: 0 4px 12px rgba(13, 110, 253, 0.4);
+      display: inline-block;
+      text-align: center;
     }
 
     .login-btn:hover {
@@ -164,17 +172,24 @@
         max-width: 100%;
       }
 
-      .login-btn {
+      .login-btns {
         top: 15px;
         right: 15px;
+        gap: 8px;
+      }
+
+      .login-btn {
         padding: 8px 16px;
       }
     }
   </style>
 </head>
 <body>
-  <!-- 🔐 Login Button -->
-  <a href="/login" class="login-btn">Login</a>
+  <!-- 🔐 Updated Login Buttons -->
+  <div class="login-btns">
+    <a href="/login?role=admin" class="login-btn">Admin Login</a>
+    <a href="/login?role=technical" class="login-btn">Technician Login</a>
+  </div>
 
   <div class="split-container">
     <!-- 📸 Left Side: Image -->

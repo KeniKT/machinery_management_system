@@ -1,198 +1,189 @@
 const express = require('express');
-const methodOverride = require('method-override');
 const session = require('express-session');
 const bcrypt = require('bcrypt');
-const sqlite3 = require('sqlite3').verbose();
+const bodyParser = require('body-parser');
+const db = require('./db');
 const path = require('path');
+const methodOverride = require('method-override');
 
 const app = express();
 const PORT = 3000;
 
-// Database connection
-const db = new sqlite3.Database('./machinery.db');
-
-// Middleware
-app.use(express.urlencoded({ extended: true }));
-app.use(express.json());
+// Configure middleware
+app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, 'views'));
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.static(path.join(__dirname, 'public')));
 app.use(methodOverride('_method'));
-app.use(express.static('public'));
-
-// Session setup
 app.use(session({
-  secret: 'your_secret_key',  // Change this in production
+  secret: 'secret-key',
   resave: false,
-  saveUninitialized: false
+  saveUninitialized: false,
+  cookie: {
+    maxAge: 24 * 60 * 60 * 1000, // 24 hours
+    httpOnly: true,
+    sameSite: 'strict'
+  }
 }));
 
-// View engine
-app.set('view engine', 'ejs');
-
-// Create users table if not exists
-db.run(`
-  CREATE TABLE IF NOT EXISTS users (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    username TEXT UNIQUE NOT NULL,
-    password_hash TEXT NOT NULL
-  )
-`);
-
-// Seed default admin user if not exists
-db.get(`SELECT * FROM users WHERE username = 'admin'`, async (err, user) => {
-  if (!user) {
-    const hash = await bcrypt.hash('admin123', 10);
-    db.run(`INSERT INTO users (username, password_hash) VALUES (?, ?)`, ['admin', hash]);
-    console.log('✅ Default admin user created with password "admin123"');
-  }
-});
-
-// --- Authentication middleware ---
-function isAuthenticated(req, res, next) {
-  if (req.session.userId) {
-    return next();
-  }
+// Authentication middleware
+const isAuthenticated = (req, res, next) => {
+  if (req.session.userId) return next();
   res.redirect('/login');
-}
+};
 
-// --- Routes ---
-
-// Landing page
-app.get('/landing', (req, res) => {
+// Routes
+app.get('/', (req, res) => {
   res.render('landing');
 });
 
-// Login
+// Login routes
 app.get('/login', (req, res) => {
-  res.render('login', { error: null });
+  res.render('login', { 
+    error: null,
+    role: 'admin'
+  });
 });
 
-app.post('/login', (req, res) => {
+app.post('/login', async (req, res) => {
   const { username, password } = req.body;
-  db.get(`SELECT * FROM users WHERE username = ?`, [username], async (err, user) => {
-    if (err || !user) {
-      return res.render('login', { error: 'Invalid credentials' });
+
+  try {
+    const user = await new Promise((resolve, reject) => {
+      db.getUserByUsername(username, (err, user) => {
+        if (err) reject(err);
+        resolve(user);
+      });
+    });
+
+    if (!user) {
+      return res.render('login', {
+        error: 'Invalid credentials',
+        role: 'admin'
+      });
     }
 
     const match = await bcrypt.compare(password, user.password_hash);
-    if (match) {
-      req.session.userId = user.id;
-      res.redirect('/home'); // Redirect to home after successful login
-    } else {
-      res.render('login', { error: 'Invalid credentials' });
+    if (!match) {
+      return res.render('login', {
+        error: 'Invalid credentials',
+        role: 'admin'
+      });
     }
+
+    // Session setup
+    req.session.userId = user.id;
+    req.session.username = user.username;
+    req.session.role = user.role;
+
+    // Redirect to home
+    res.redirect('/home');
+
+  } catch (err) {
+    console.error('Login error:', err);
+    res.render('login', {
+      error: 'Server error',
+      role: 'admin'
+    });
+  }
+});
+
+// Home route
+app.get('/home', isAuthenticated, (req, res) => {
+  res.render('home', {
+    username: req.session.username,
+    role: req.session.role
+  });
+});
+
+// Machine routes
+app.get('/machines', isAuthenticated, (req, res) => {
+  db.getAllMachinesFull((err, machines) => {
+    if (err) {
+      console.error('Machine retrieval error:', err);
+      return res.status(500).send('Error retrieving machines');
+    }
+     res.render('index', { machines }); 
+  });
+});
+
+// Maintenance routes
+app.get('/maintenance', isAuthenticated, (req, res) => {
+  db.getAllMaintenanceRecords((err, maintenanceRecords) => {
+    if (err) {
+      console.error('Maintenance records error:', err);
+      return res.status(500).send('Error retrieving records');
+    }
+    db.getAllMachines((err, machines) => {
+      if (err) {
+        console.error('Machines retrieval error:', err);
+        return res.status(500).send('Error retrieving machines');
+      }
+      res.render('maintenance', { maintenanceRecords, machines });
+    });
+  });
+});
+
+// Show new maintenance form
+app.get('/maintenance/new', isAuthenticated, (req, res) => {
+  db.getAllMachines((err, machines) => {
+    if (err) {
+      console.error('Machines retrieval error:', err);
+      return res.status(500).send('Error retrieving machines');
+    }
+    res.render('new_maintenance', { machines });
+  });
+});
+
+// Handle maintenance form submission
+app.post('/maintenance/add', isAuthenticated, (req, res) => {
+  const { machine_id, date, description, performed_by } = req.body;
+  db.addMaintenance(machine_id, date, description, performed_by, (err) => {
+    if (err) {
+      console.error('Error adding maintenance:', err);
+      return res.status(500).send('Error adding maintenance record');
+    }
+    res.redirect('/maintenance');
   });
 });
 
 // Logout
 app.get('/logout', (req, res) => {
-  req.session.destroy();
-  res.redirect('/login');
-});
-
-// Root route -> show landing page
-app.get('/', (req, res) => {
-  res.render('landing');  // Default page for root
-});
-
-// Home page after login
-app.get('/home', isAuthenticated, (req, res) => {
-  res.render('home');  // Requires views/home.ejs
-});
-
-// Machines list page
-app.get('/machines', isAuthenticated, (req, res) => {
-  db.all('SELECT * FROM machines', (err, machines) => {
-    if (err) {
-      res.status(500).send('Database error');
-      return;
-    }
-    res.render('index', { machines });
+  req.session.destroy(err => {
+    if (err) console.error('Session destruction error:', err);
+    res.redirect('/login');
   });
 });
 
-// Add machine
+// This should already be in your code
+app.post('/machines/add', isAuthenticated, (req, res) => {
+  const { name, type, status } = req.body;
+  db.addMachine(name, type, status, (err) => {
+    if (err) {
+      console.error('Error adding machine:', err);
+      return res.status(500).send('Error adding machine');
+    }
+    res.redirect('/machines');
+  });
+});
+// Add this route to handle displaying the form
 app.get('/machines/new', isAuthenticated, (req, res) => {
   res.render('new');
 });
 
-app.post('/machines', isAuthenticated, (req, res) => {
-  const { name, type, status } = req.body;
-  db.run('INSERT INTO machines (name, type, status) VALUES (?, ?, ?)', [name, type, status], (err) => {
-    if (err) {
-      res.status(500).send('Database error');
-      return;
-    }
-    res.redirect('/machines');
-  });
+// 404 handler
+app.use((req, res) => {
+  res.status(404).send(`
+    <div style="text-align: center; padding: 50px;">
+      <h1>Page not found</h1>
+      <a href="/home" style="margin-top: 20px; display: inline-block;">
+        Return to Dashboard
+      </a>
+    </div>
+  `);
 });
 
-// Edit machine
-app.get('/machines/:id/edit', isAuthenticated, (req, res) => {
-  const machineId = req.params.id;
-  db.get('SELECT * FROM machines WHERE id = ?', [machineId], (err, machine) => {
-    if (err || !machine) {
-      res.status(404).send('Machine not found');
-      return;
-    }
-    res.render('edit', { machine });
-  });
-});
 
-app.put('/machines/:id', isAuthenticated, (req, res) => {
-  const { name, type, status } = req.body;
-  const machineId = req.params.id;
-  db.run('UPDATE machines SET name = ?, type = ?, status = ? WHERE id = ?', [name, type, status, machineId], (err) => {
-    if (err) {
-      res.status(500).send('Database error');
-      return;
-    }
-    res.redirect('/machines');
-  });
-});
-
-// Delete machine
-app.delete('/machines/:id', isAuthenticated, (req, res) => {
-  const machineId = req.params.id;
-  db.run('DELETE FROM machines WHERE id = ?', [machineId], (err) => {
-    if (err) {
-      res.status(500).send('Database error');
-      return;
-    }
-    res.redirect('/machines');
-  });
-});
-
-// Maintenance pages
-app.get('/maintenance', isAuthenticated, (req, res) => {
-  const sql = `
-    SELECT m.*, machines.name AS machine_name 
-    FROM maintenance m 
-    JOIN machines ON m.machine_id = machines.id
-  `;
-  db.all(sql, (err, maintenanceRecords) => {
-    if (err) return res.status(500).send('Database error');
-    res.render('maintenance', { maintenanceRecords });
-  });
-});
-
-app.get('/maintenance/new', isAuthenticated, (req, res) => {
-  db.all('SELECT id, name FROM machines', (err, machines) => {
-    if (err) return res.status(500).send('Database error');
-    res.render('new_maintenance', { machines });
-  });
-});
-
-app.post('/maintenance', isAuthenticated, (req, res) => {
-  const { machine_id, date, description, performed_by } = req.body;
-  db.run(`
-    INSERT INTO maintenance (machine_id, date, description, performed_by)
-    VALUES (?, ?, ?, ?)`,
-    [machine_id, date, description, performed_by],
-    (err) => {
-      if (err) return res.status(500).send('Database error');
-      res.redirect('/maintenance');
-    }
-  );
-});
 
 // Start server
 app.listen(PORT, () => {
