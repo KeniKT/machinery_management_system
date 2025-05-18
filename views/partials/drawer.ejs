@@ -18,6 +18,7 @@
   </div>
   <div class="offcanvas-body">
     <ul class="nav flex-column">
+      <% if (role === 'admin') { %>
       <li class="nav-item">
         <a
           class="nav-link <%= activePage === 'dashboard' ? 'active' : '' %>"
@@ -25,8 +26,6 @@
           >Dashboard</a
         >
       </li>
-      <% if (role === 'admin') { %>
-
       <li class="nav-item">
         <a
           class="nav-link <%= activePage === 'machines' ? 'active' : '' %>"

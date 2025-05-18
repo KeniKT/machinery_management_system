@@ -88,10 +88,10 @@ function addMachine(name, type, model, callback) {
   );
 }
 
-function updateMachine(id, name, type, status, callback) {
+function updateMachine(id, name, type, model, callback) {
   db.run(
-    "UPDATE machines SET name = ?, type = ?, status = ? WHERE id = ?",
-    [name, type, status, id],
+    "UPDATE machines SET name = ?, type = ?, model = ? WHERE id = ?",
+    [name, type, model, id],
     callback
   );
 }
@@ -124,15 +124,21 @@ function addMaintenance(machine_id, due_date, description, user_id, callback) {
   );
 }
 
-
 // get maintenance by id
 function getMaintenanceById(id, callback) {
   db.get("SELECT * FROM maintenance WHERE id = ?", [id], callback);
 }
 
-function updateMaintenance(id, machine_id, date, description, user_id, callback) {
+function updateMaintenance(
+  id,
+  machine_id,
+  date,
+  description,
+  user_id,
+  callback
+) {
   db.run(
-    "UPDATE maintenance SET machine_id = ?, date = ?, description = ?, user_id = ? WHERE id = ?",
+    "UPDATE maintenance SET machine_id = ?, due_date = ?, description = ?, user_id = ? WHERE id = ?",
     [machine_id, date, description, user_id, id],
     callback
   );
@@ -164,7 +170,61 @@ function getAllTechnicians(callback) {
 
 // update maintenance status
 function updateMaintenanceStatus(id, status, callback) {
-  db.run("UPDATE maintenance SET status = ? WHERE id = ?", [status, id], callback);
+  db.run(
+    "UPDATE maintenance SET status = ? WHERE id = ?",
+    [status, id],
+    callback
+  );
+}
+
+function getDashboardStats(callback) {
+  const stats = {};
+
+  db.get("SELECT COUNT(*) AS total_machines FROM machines", (err, row) => {
+    if (err) return callback(err);
+    stats.total_machines = row.total_machines;
+
+    db.get("SELECT COUNT(*) AS total_tasks FROM maintenance", (err, row) => {
+      if (err) return callback(err);
+      stats.total_tasks = row.total_tasks;
+
+      db.get(
+        `SELECT 
+            SUM(CASE WHEN status = 'Pending' THEN 1 ELSE 0 END) AS pending,
+            SUM(CASE WHEN status = 'Work in Progress' THEN 1 ELSE 0 END) AS in_progress,
+            SUM(CASE WHEN status = 'Done' THEN 1 ELSE 0 END) AS done
+         FROM maintenance`,
+        (err, row) => {
+          if (err) return callback(err);
+          stats.pending = row.pending || 0;
+          stats.in_progress = row.in_progress || 0;
+          stats.done = row.done || 0;
+
+          db.get(
+            "SELECT COUNT(*) AS total_technicians FROM users WHERE role = 'technician'",
+            (err, row) => {
+              if (err) return callback(err);
+              stats.total_technicians = row.total_technicians;
+
+              db.get(
+                `SELECT 
+                    SUM(CASE WHEN status = 'Done' THEN 1 ELSE 0 END) AS completed_repairs,
+                    SUM(CASE WHEN status = 'Work in Progress' THEN 1 ELSE 0 END) AS active_repairs
+                 FROM maintenance`,
+                (err, row) => {
+                  if (err) return callback(err);
+                  stats.completed_repairs = row.completed_repairs || 0;
+                  stats.active_repairs = row.active_repairs || 0;
+
+                  callback(null, stats);
+                }
+              );
+            }
+          );
+        }
+      );
+    });
+  });
 }
 
 function closeDatabase() {
@@ -192,5 +252,6 @@ module.exports = {
   getAllTechnicians,
   getTasksByUserId,
   updateMaintenanceStatus,
+  getDashboardStats,
   closeDatabase,
 };

@@ -75,7 +75,12 @@ app.post("/login", async (req, res) => {
     req.session.role = user.role;
 
     // Redirect to home
-    res.redirect("/home");
+    if (user.role === "admin") {
+       res.redirect("/home");
+    } else {
+      res.redirect("/tasks")
+    }
+   
   } catch (err) {
     res.render("login", {
       error: "Server error",
@@ -83,12 +88,20 @@ app.post("/login", async (req, res) => {
   }
 });
 
-// Home route
+
 app.get("/home", isAuthenticated, (req, res) => {
-  res.render("home", {
-    username: req.session.username,
-    role: req.session.role,
-    activePage: "home",
+  db.getDashboardStats((err, stats) => {
+    if (err) {
+      console.error("Error fetching dashboard stats:", err);
+      return res.status(500).send("Internal Server Error");
+    }
+
+    res.render("home", {
+      username: req.session.username,
+      role: req.session.role,
+      activePage: "home",
+      stats, // pass the stats to the view
+    });
   });
 });
 
@@ -139,8 +152,8 @@ app.get("/machines/:id/edit", isAuthenticated, (req, res) => {
 
 // Edit machine
 app.post("/machines/:id", isAuthenticated, (req, res) => {
-  const { name, type, status } = req.body;
-  db.updateMachine(req.params.id, name, type, status, (err) => {
+  const { name, type, model } = req.body;
+  db.updateMachine(req.params.id, name, type, model, (err) => {
     if (err) {
       console.error("Error updating machine:", err);
       return res.status(500).send("Error updating machine");
@@ -209,7 +222,6 @@ app.post("/maintenance/add", isAuthenticated, (req, res) => {
   });
 });
 
-// Display edit maintenance edit page
 app.get("/maintenance/:id/edit", isAuthenticated, (req, res) => {
   db.getMaintenanceById(req.params.id, (err, maintenance) => {
     if (err) {
@@ -221,20 +233,25 @@ app.get("/maintenance/:id/edit", isAuthenticated, (req, res) => {
         console.error("Machines retrieval error:", err);
         return res.status(500).send("Error retrieving machines");
       }
-      res.render("edit_maintenance", { maintenance, machines });
+      db.getAllTechnicians((err, users) => {
+        if (err) {
+          console.error("Users retrieval error:", err);
+          return res.status(500).send("Error retrieving users");
+        }
+        res.render("edit_maintenance", { maintenance, machines, users });
+      });
     });
   });
 });
 
-// Edit maintenance
 app.post("/maintenance/edit/:id", isAuthenticated, (req, res) => {
-  const { machine_id, date, description, performed_by } = req.body;
+  const { machine_id, due_date, description, user_id } = req.body;
   db.updateMaintenance(
     req.params.id,
     machine_id,
-    date,
+    due_date,
     description,
-    performed_by,
+    user_id,
     (err) => {
       if (err) {
         console.error("Error updating maintenance:", err);

@@ -81,21 +81,27 @@
            required>
   </div>
 
-  <div class="mb-3">
-    <label class="form-label">Machine Type</label>
-    <input class="form-control" 
-           type="text" 
-           name="type" 
-           value="<%= machine.type %>" 
-           required>
-  </div>
+  <select class="form-select" name="type" required>
+  <option value="" disabled>Select machine type</option>
+  <option value="Excavator" <%= machine.type === 'Excavator' ? 'selected' : '' %>>Excavator</option>
+  <option value="Bulldozer" <%= machine.type === 'Bulldozer' ? 'selected' : '' %>>Bulldozer</option>
+  <option value="Crane" <%= machine.type === 'Crane' ? 'selected' : '' %>>Crane</option>
+  <option value="Loader" <%= machine.type === 'Loader' ? 'selected' : '' %>>Loader</option>
+  <option value="Grader" <%= machine.type === 'Grader' ? 'selected' : '' %>>Grader</option>
+  <option value="Backhoe" <%= machine.type === 'Backhoe' ? 'selected' : '' %>>Backhoe</option>
+  <option value="Compactor" <%= machine.type === 'Compactor' ? 'selected' : '' %>>Compactor</option>
+v  <option value="Trencher" <%= machine.type === 'Trencher' ? 'selected' : '' %>>Trencher</option>
+  <option value="Drilling Rig" <%= machine.type === 'Drilling Rig' ? 'selected' : '' %>>Drilling Rig</option>
+
+  <!-- Add other options similarly -->
+</select>
 
   <div class="mb-3">
-    <label class="form-label">Machine Status</label>
+    <label class="form-label">	Model</label>
     <input class="form-control" 
            type="text" 
-           name="status" 
-           value="<%= machine.status %>" 
+           name="model" 
+           value="<%= machine.model %>" 
            required>
   </div>
 
