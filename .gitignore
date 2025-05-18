@@ -1,3 +1,4 @@
 /node_modules
 /machinery.db
 .env
+db/sessions.sqlite

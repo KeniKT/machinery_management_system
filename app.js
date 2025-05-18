@@ -4,7 +4,6 @@ const bcrypt = require('bcrypt');
 const bodyParser = require('body-parser');
 const db = require('./db');
 const path = require('path');
-const methodOverride = require('method-override');
 
 const app = express();
 const PORT = 3000;
@@ -14,13 +13,13 @@ app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(methodOverride('_method'));
 app.use(session({
   secret: 'secret-key',
   resave: false,
   saveUninitialized: false,
+  rolling: true,
   cookie: {
-    maxAge: 24 * 60 * 60 * 1000, // 24 hours
+    maxAge:  12 * 60 * 60 * 1000,
     httpOnly: true,
     sameSite: 'strict'
   }
@@ -41,7 +40,6 @@ app.get('/', (req, res) => {
 app.get('/login', (req, res) => {
   res.render('login', { 
     error: null,
-    role: 'admin'
   });
 });
 
@@ -59,17 +57,16 @@ app.post('/login', async (req, res) => {
     if (!user) {
       return res.render('login', {
         error: 'Invalid credentials',
-        role: 'admin'
       });
     }
 
-    const match = await bcrypt.compare(password, user.password_hash);
+    const match = await bcrypt.compare(password, user.password);
     if (!match) {
       return res.render('login', {
         error: 'Invalid credentials',
-        role: 'admin'
       });
     }
+
 
     // Session setup
     req.session.userId = user.id;
@@ -78,12 +75,9 @@ app.post('/login', async (req, res) => {
 
     // Redirect to home
     res.redirect('/home');
-
   } catch (err) {
-    console.error('Login error:', err);
     res.render('login', {
       error: 'Server error',
-      role: 'admin'
     });
   }
 });
@@ -104,6 +98,60 @@ app.get('/machines', isAuthenticated, (req, res) => {
       return res.status(500).send('Error retrieving machines');
     }
      res.render('index', { machines }); 
+  });
+});
+
+// Add this route to handle displaying the form
+app.get('/machines/new', isAuthenticated, (req, res) => {
+  res.render('new');
+});
+
+// Add new machine
+app.post('/machines/add', isAuthenticated, (req, res) => {
+  const { name, type, status } = req.body;
+  db.addMachine(name, type, status, (err) => {
+    if (err) {
+      console.error('Error adding machine:', err);
+      return res.status(500).send('Error adding machine');
+    }
+    res.redirect('/machines');
+  });
+});
+
+// Display edit machine edit page
+app.get('/machines/:id/edit', isAuthenticated, (req, res) => {
+  console.log("machien id", req.params.id);
+  // get machine by id
+  db.getMachineById(req.params.id, (err, machine) => {
+    if (err) {
+      console.error('Machine retrieval error:', err);
+      return res.status(500).send('Error retrieving machine');
+    }
+    res.render('edit', { machine });
+  })
+
+});
+
+// Edit machine
+app.post('/machines/:id', isAuthenticated, (req, res) => {
+  const { name, type, status } = req.body;
+  db.updateMachine(req.params.id, name, type, status, (err) => {
+    if (err) {
+      console.error('Error updating machine:', err);
+      return res.status(500).send('Error updating machine');
+    }
+    res.redirect('/machines');
+  });
+});
+
+// Delete machine by id
+app.delete('/machines/:id', isAuthenticated, (req, res) => {
+  db.deleteMachine(req.params.id, (err) => {
+    if (err) {
+      console.error('Error deleting machine:', err);
+      return res.status(500).send('Error deleting machine');
+    }
+    res.redirect('/machines');
   });
 });
 
@@ -155,21 +203,7 @@ app.get('/logout', (req, res) => {
   });
 });
 
-// This should already be in your code
-app.post('/machines/add', isAuthenticated, (req, res) => {
-  const { name, type, status } = req.body;
-  db.addMachine(name, type, status, (err) => {
-    if (err) {
-      console.error('Error adding machine:', err);
-      return res.status(500).send('Error adding machine');
-    }
-    res.redirect('/machines');
-  });
-});
-// Add this route to handle displaying the form
-app.get('/machines/new', isAuthenticated, (req, res) => {
-  res.render('new');
-});
+
 
 // 404 handler
 app.use((req, res) => {
@@ -186,6 +220,35 @@ app.use((req, res) => {
 
 
 // Start server
-app.listen(PORT, () => {
+const server = app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
 });
+
+// Graceful shutdown handler
+async function shutdown() {
+  try {
+    console.log('\nClosing database connection...');
+    server.closeAllConnections && server.closeAllConnections();
+    await db.closeDatabase();
+    console.log('Database connection closed.');
+    
+    server.close(() => {
+      console.log('Server stopped');
+      process.exit(0);
+    });
+    
+    // Force close after 5 seconds
+    setTimeout(() => {
+      console.error('Forcing shutdown...');
+      process.exit(1);
+    }, 5000);
+    
+  } catch (err) {
+    console.error('Shutdown error:', err);
+    process.exit(1);
+  }
+}
+
+// Handle termination signals
+process.on('SIGINT', shutdown);
+process.on('SIGTERM', shutdown);
