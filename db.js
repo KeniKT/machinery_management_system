@@ -118,6 +118,23 @@ function addMaintenance(machine_id, date, description, performed_by, callback) {
   );
 }
 
+// get maintenance by id
+function getMaintenanceById(id, callback) {
+  db.get("SELECT * FROM maintenance WHERE id = ?", [id], callback);
+}
+
+function updateMaintenance(id, machine_id, date, description, performed_by, callback) {
+  db.run(
+    "UPDATE maintenance SET machine_id = ?, date = ?, description = ?, performed_by = ? WHERE id = ?",
+    [machine_id, date, description, performed_by, id],
+    callback
+  );
+}
+
+function deleteMaintenance(id, callback) {
+  db.run("DELETE FROM maintenance WHERE id = ?", [id], callback);
+}
+
 function closeDatabase() {
   return new Promise((resolve, reject) => {
     db.close((err) => {
@@ -137,5 +154,8 @@ module.exports = {
   deleteMachine,
   getAllMaintenanceRecords,
   addMaintenance,
+  getMaintenanceById,
+  updateMaintenance,
+  deleteMaintenance,
   closeDatabase,
 };

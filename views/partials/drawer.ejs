@@ -1,0 +1,128 @@
+<!-- partials/drawer.ejs -->
+
+<!-- 🔧 Drawer Menu -->
+<div
+  class="offcanvas offcanvas-start"
+  tabindex="-1"
+  id="leftDrawer"
+  aria-labelledby="leftDrawerLabel"
+>
+  <div class="offcanvas-header">
+    <h5 id="leftDrawerLabel"></h5>
+    <button
+      type="button"
+      class="btn-close"
+      data-bs-dismiss="offcanvas"
+      aria-label="Close"
+    ></button>
+  </div>
+  <div class="offcanvas-body">
+    <ul class="nav flex-column">
+      <li class="nav-item">
+        <a
+          class="nav-link <%= activePage === 'dashboard' ? 'active' : '' %>"
+          href="/home"
+          >Dashboard</a
+        >
+      </li>
+      <li class="nav-item">
+        <a
+          class="nav-link <%= activePage === 'machines' ? 'active' : '' %>"
+          href="/machines"
+          >Machines</a
+        >
+      </li>
+      <li class="nav-item">
+        <a
+          class="nav-link <%= activePage === 'maintenance' ? 'active' : '' %>"
+          href="/maintenance"
+          >Maintenance</a
+        >
+      </li>
+    </ul>
+  </div>
+</div>
+
+<!-- ☰ Drawer Toggle Button -->
+<button
+  class="btn btn-primary menu-btn"
+  data-bs-toggle="offcanvas"
+  data-bs-target="#leftDrawer"
+  aria-controls="leftDrawer"
+>
+  <i class="fas fa-bars"></i>
+</button>
+
+<style>
+  /* Drawer Styling */
+  .offcanvas-start {
+    width: 280px !important;
+    background: linear-gradient(to bottom right, #1e2a38, #2d3e50);
+    color: #ffffff;
+    box-shadow: 4px 0px 10px rgba(0, 0, 0, 0.4);
+    border-radius: 0 20px 20px 0;
+    transition: transform 0.3s ease;
+  }
+
+  .offcanvas-header {
+    background-color: #1b3c6b;
+    color: white;
+    padding: 16px;
+    border-radius: 20px 20px 0 0;
+  }
+
+  .offcanvas-header h5 {
+    font-weight: bold;
+    font-size: 1.2rem;
+  }
+
+  .btn-close {
+    filter: invert(1);
+  }
+
+  .offcanvas-body {
+    padding: 20px;
+    font-size: 1rem;
+  }
+
+  .nav-link {
+    color: #f1f1f1;
+    font-size: 1.1rem;
+    padding: 12px 15px;
+    border-radius: 8px;
+    transition: background-color 0.3s ease;
+  }
+
+  .nav-link:hover {
+    background-color: #3a506b;
+  }
+
+  .nav-link.active {
+    background-color: #5c7cfa;
+    font-weight: bold;
+  }
+
+  .menu-btn {
+    position: fixed;
+    top: 15px;
+    left: 15px;
+    z-index: 1050;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .menu-btn:hover {
+    background-color: #8290ac;
+  }
+
+  .menu-btn i {
+    font-size: 1.5rem;
+  }
+</style>

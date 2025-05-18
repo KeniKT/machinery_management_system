@@ -1,258 +1,268 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Home | Machinery Management</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Home | Machinery Management</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    />
 
-  <style>
-    /* Footer styling */
-    .footer {
-      background-color: #fdfeff;
-      padding: 10px;
-      text-align: center;
-      position: relative;
-      bottom: 0;
-      width: 100%;
-    }
-
-    /* Content spacing */
-    .content-wrapper {
-      min-height: calc(100vh - 150px);
-      padding-bottom: 60px;
-    }
-
-    html, body {
-      margin: 0;
-      padding: 0;
-      scroll-snap-type: y mandatory;
-      overflow-x: hidden;
-    }
-
-    /* Drawer Styling */
-    .offcanvas-start {
-      width: 280px !important;
-      background: linear-gradient(to bottom right, #1e2a38, #2d3e50);
-      color: #ffffff;
-      box-shadow: 4px 0px 10px rgba(0, 0, 0, 0.4);
-      border-radius: 0 20px 20px 0;
-      transition: transform 0.3s ease;
-    }
-
-    .offcanvas-header {
-      background-color: #1b3c6b;
-      color: white;
-      padding: 16px;
-      border-radius: 20px 20px 0 0;
-    }
-
-    .offcanvas-header h5 {
-      font-weight: bold;
-      font-size: 1.2rem;
-    }
-
-    .btn-close {
-      filter: invert(1);
-    }
-
-    .offcanvas-body {
-      padding: 20px;
-      font-size: 1rem;
-    }
-
-    .nav-link {
-      color: #f1f1f1;
-      font-size: 1.1rem;
-      padding: 12px 15px;
-      border-radius: 8px;
-      transition: background-color 0.3s ease;
-    }
-
-    .nav-link:hover {
-      background-color: #3a506b;
-    }
-
-    .nav-link.active {
-      background-color: #5c7cfa;
-      font-weight: bold;
-    }
-
-    .menu-btn {
-      position: fixed;
-      top: 15px;
-      left: 15px;
-      z-index: 1050;
-      border-radius: 50%;
-      width: 50px;
-      height: 50px;
-      background-color: #007bff;
-      color: white;
-      border: none;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-
-    .menu-btn:hover {
-      background-color: #8290ac;
-    }
-
-    .menu-btn i {
-      font-size: 1.5rem;
-    }
-
-    .home-banner {
-      width: 100%;
-      height: 100vh;
-      object-fit: cover;
-      object-position: center;
-    }
-
-    .scroll-section {
-      padding: 60px 20px;
-      scroll-snap-align: start;
-      background-color: #f5f5f5;
-    }
-
-    .feature-box {
-      background-color: #ffffff;
-      padding: 30px;
-      border-radius: 10px;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-      margin-bottom: 30px;
-      height: 100%;
-    }
-
-    .feature-box h3 {
-      font-size: 1.5rem;
-      margin-bottom: 15px;
-    }
-
-    .feature-box p {
-      font-size: 1rem;
-      text-align: left;
-    }
-
-    @media (max-width: 768px) {
-      .home-banner {
-        height: 60vh;
+    <style>
+      /* Footer styling */
+      .footer {
+        background-color: #fdfeff;
+        padding: 10px;
+        text-align: center;
+        position: relative;
+        bottom: 0;
+        width: 100%;
       }
-    }
 
-    h1 {
-      font-size: 3rem;
-      font-weight: bold;
-    }
+      /* Content spacing */
+      .content-wrapper {
+        min-height: calc(100vh - 150px);
+        padding-bottom: 60px;
+      }
 
-    p.lead {
-      font-size: 1.5rem;
-      font-weight: bold;
-      font-style: italic;
-    }
-  </style>
-</head>
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        scroll-snap-type: y mandatory;
+        overflow-x: hidden;
+      }
 
-<body>
+      /* Drawer Styling */
+      .offcanvas-start {
+        width: 280px !important;
+        background: linear-gradient(to bottom right, #1e2a38, #2d3e50);
+        color: #ffffff;
+        box-shadow: 4px 0px 10px rgba(0, 0, 0, 0.4);
+        border-radius: 0 20px 20px 0;
+        transition: transform 0.3s ease;
+      }
 
-  <!-- 🔧 Drawer Menu -->
-  <div class="offcanvas offcanvas-start" tabindex="-1" id="leftDrawer" aria-labelledby="leftDrawerLabel">
-    <div class="offcanvas-header">
-      <h5 id="leftDrawerLabel"></h5>
-      <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+      .offcanvas-header {
+        background-color: #1b3c6b;
+        color: white;
+        padding: 16px;
+        border-radius: 20px 20px 0 0;
+      }
+
+      .offcanvas-header h5 {
+        font-weight: bold;
+        font-size: 1.2rem;
+      }
+
+      .btn-close {
+        filter: invert(1);
+      }
+
+      .offcanvas-body {
+        padding: 20px;
+        font-size: 1rem;
+      }
+
+      .nav-link {
+        color: #f1f1f1;
+        font-size: 1.1rem;
+        padding: 12px 15px;
+        border-radius: 8px;
+        transition: background-color 0.3s ease;
+      }
+
+      .nav-link:hover {
+        background-color: #3a506b;
+      }
+
+      .nav-link.active {
+        background-color: #5c7cfa;
+        font-weight: bold;
+      }
+
+      .menu-btn {
+        position: fixed;
+        top: 15px;
+        left: 15px;
+        z-index: 1050;
+        border-radius: 50%;
+        width: 50px;
+        height: 50px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .menu-btn:hover {
+        background-color: #8290ac;
+      }
+
+      .menu-btn i {
+        font-size: 1.5rem;
+      }
+
+      .home-banner {
+        width: 100%;
+        height: 100vh;
+        object-fit: cover;
+        object-position: center;
+      }
+
+      .scroll-section {
+        padding: 60px 20px;
+        scroll-snap-align: start;
+        background-color: #f5f5f5;
+      }
+
+      .feature-box {
+        background-color: #ffffff;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        margin-bottom: 30px;
+        height: 100%;
+      }
+
+      .feature-box h3 {
+        font-size: 1.5rem;
+        margin-bottom: 15px;
+      }
+
+      .feature-box p {
+        font-size: 1rem;
+        text-align: left;
+      }
+
+      @media (max-width: 768px) {
+        .home-banner {
+          height: 60vh;
+        }
+      }
+
+      h1 {
+        font-size: 3rem;
+        font-weight: bold;
+      }
+
+      p.lead {
+        font-size: 1.5rem;
+        font-weight: bold;
+        font-style: italic;
+      }
+    </style>
+  </head>
+
+  <body>
+    <%- include('partials/drawer') %>
+
+    <!-- 🖼 Welcome Banner -->
+    <div class="container-fluid p-0">
+      <img src="/images/banner.png" alt="Banner" class="home-banner" />
     </div>
-    <div class="offcanvas-body">
-      <ul class="nav flex-column">
-        <li class="nav-item">
-          <a class="nav-link active" href="/home">Dashboard</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="/machines/new">Add New Machine</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="/machines">View Machines</a>
-        </li>
-        <!-- 🛠 Maintenance Links -->
-        <li class="nav-item">
-          <a class="nav-link" href="/maintenance">Maintenance Records</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="/maintenance/new">Add Maintenance</a>
-        </li>
-      </ul>
+
+    <!-- 👋 Welcome Message -->
+    <div class="container text-center my-5">
+      <h1 class="mb-3">Welcome to the Machinery Management System</h1>
+      <p class="lead mb-3">
+        Streamline your equipment tracking, maintenance, and monitoring — all
+        from one place.
+      </p>
     </div>
-  </div>
 
-  <!-- ☰ Drawer Toggle Button -->
-  <button class="btn btn-primary menu-btn" data-bs-toggle="offcanvas" data-bs-target="#leftDrawer" aria-controls="leftDrawer">
-    <i class="fas fa-bars"></i>
-  </button>
-
-  <!-- 🖼 Welcome Banner -->
-  <div class="container-fluid p-0">
-    <img src="/images/banner.png" alt="Banner" class="home-banner">
-  </div>
-
-  <!-- 👋 Welcome Message -->
-  <div class="container text-center my-5">
-    <h1 class="mb-3">Welcome to the Machinery Management System</h1>
-    <p class="lead mb-3">Streamline your equipment tracking, maintenance, and monitoring — all from one place.</p>
-  </div>
-
-  <!-- 🚀 Features Section -->
-  <div class="container scroll-section">
-    <div class="row">
-      <div class="col-md-6">
-        <div class="feature-box">
-          <h3>📋 Machinery Inventory</h3>
-          <p>The Machinery Inventory module allows organizations to systematically catalog all machinery assets with detailed information such as name, type, model, serial number, and current operational status. This feature ensures real-time visibility into what equipment is available, under maintenance, or decommissioned.</p>
+    <!-- 🚀 Features Section -->
+    <div class="container scroll-section">
+      <div class="row">
+        <div class="col-md-6">
+          <div class="feature-box">
+            <h3>📋 Machinery Inventory</h3>
+            <p>
+              The Machinery Inventory module allows organizations to
+              systematically catalog all machinery assets with detailed
+              information such as name, type, model, serial number, and current
+              operational status. This feature ensures real-time visibility into
+              what equipment is available, under maintenance, or decommissioned.
+            </p>
+          </div>
         </div>
-      </div>
 
-      <div class="col-md-6">
-        <div class="feature-box">
-          <h3>📋 Machinery Inventory</h3>
-          <p>This module creates and maintains a centralized database of all machinery assets, with machine name, category, operational status, location, and ownership. It enables search, condition tracking, and real-time updates, supporting accurate asset visibility and reducing administrative overhead.</p>
+        <div class="col-md-6">
+          <div class="feature-box">
+            <h3>📋 Machinery Inventory</h3>
+            <p>
+              This module creates and maintains a centralized database of all
+              machinery assets, with machine name, category, operational status,
+              location, and ownership. It enables search, condition tracking,
+              and real-time updates, supporting accurate asset visibility and
+              reducing administrative overhead.
+            </p>
+          </div>
         </div>
-      </div>
 
-      <div class="col-md-6">
-        <div class="feature-box">
-          <h3>🛠 Maintenance Tracking</h3>
-          <p>Schedule and monitor preventive and corrective maintenance. Assign tasks, log repairs, and receive alerts for overdue services. Maintenance history is preserved for analysis and trend tracking, helping reduce costs and improve safety and uptime.</p>
+        <div class="col-md-6">
+          <div class="feature-box">
+            <h3>🛠 Maintenance Tracking</h3>
+            <p>
+              Schedule and monitor preventive and corrective maintenance. Assign
+              tasks, log repairs, and receive alerts for overdue services.
+              Maintenance history is preserved for analysis and trend tracking,
+              helping reduce costs and improve safety and uptime.
+            </p>
+          </div>
         </div>
-      </div>
 
-      <div class="col-md-6">
-        <div class="feature-box">
-          <h3>📊 Performance Monitoring</h3>
-          <p>Collect and analyze data on usage, downtime, and productivity. Dashboards and reports help identify inefficiencies, monitor performance trends, and improve decision-making on asset deployment and replacement planning.</p>
+        <div class="col-md-6">
+          <div class="feature-box">
+            <h3>📊 Performance Monitoring</h3>
+            <p>
+              Collect and analyze data on usage, downtime, and productivity.
+              Dashboards and reports help identify inefficiencies, monitor
+              performance trends, and improve decision-making on asset
+              deployment and replacement planning.
+            </p>
+          </div>
         </div>
-      </div>
 
-      <div class="col-md-6">
-        <div class="feature-box">
-          <h3>👷 Operator Logs</h3>
-          <p>Track operator-machine interactions. Log working hours, shifts, and completed tasks. Helps audit usage, improve accountability, and support training or compliance efforts by associating performance with personnel data.</p>
+        <div class="col-md-6">
+          <div class="feature-box">
+            <h3>👷 Operator Logs</h3>
+            <p>
+              Track operator-machine interactions. Log working hours, shifts,
+              and completed tasks. Helps audit usage, improve accountability,
+              and support training or compliance efforts by associating
+              performance with personnel data.
+            </p>
+          </div>
         </div>
-      </div>
 
-      <div class="col-md-6">
-        <div class="feature-box">
-          <h3>📁 Document Management</h3>
-          <p>Securely store manuals, maintenance logs, warranties, and certifications. Documents are associated with machines for fast retrieval, reducing delays and ensuring readiness during audits, inspections, or service sessions.</p>
+        <div class="col-md-6">
+          <div class="feature-box">
+            <h3>📁 Document Management</h3>
+            <p>
+              Securely store manuals, maintenance logs, warranties, and
+              certifications. Documents are associated with machines for fast
+              retrieval, reducing delays and ensuring readiness during audits,
+              inspections, or service sessions.
+            </p>
+          </div>
         </div>
       </div>
     </div>
-  </div>
 
-  <!-- 📌 Footer -->
-  <footer class="footer">
-    <p>&copy; 2025 Machinery Dashboard. All rights reserved.</p>
-  </footer>
+    <!-- 📌 Footer -->
+    <footer class="footer">
+      <p>&copy; 2025 Machinery Dashboard. All rights reserved.</p>
+    </footer>
 
-  <!-- Bootstrap JS -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-</body>
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
 </html>
