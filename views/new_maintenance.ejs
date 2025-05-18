@@ -68,16 +68,20 @@
         </select>
       </div>
       <div class="mb-3">
-        <label class="form-label">Date:</label>
-        <input type="date" name="date" class="form-control" required>
+        <label class="form-label">Due Date:</label>
+        <input type="date" name="due_date" class="form-control" required>
       </div>
       <div class="mb-3">
         <label class="form-label">Description:</label>
         <textarea name="description" class="form-control" rows="3" required></textarea>
       </div>
       <div class="mb-3">
-        <label class="form-label">Performed By:</label>
-        <input type="text" name="performed_by" class="form-control" required>
+        <label class="form-label">Assigned To:</label>
+        <select name="user_id" class="form-select" required>
+          <% users.forEach(user => { %>
+            <option value="<%= user.id %>"><%= user.first_name + ' ' + user.last_name %></option>
+          <% }) %>
+        </select>
       </div>
 
       <div class="d-flex justify-content-start mt-4">

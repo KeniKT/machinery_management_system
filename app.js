@@ -99,7 +99,11 @@ app.get("/machines", isAuthenticated, (req, res) => {
       console.error("Machine retrieval error:", err);
       return res.status(500).send("Error retrieving machines");
     }
-    res.render("index", { machines, activePage: "machines" });
+    res.render("index", {
+      machines,
+      activePage: "machines",
+      role: req.session.role,
+    });
   });
 });
 
@@ -110,8 +114,8 @@ app.get("/machines/new", isAuthenticated, (req, res) => {
 
 // Add new machine
 app.post("/machines/add", isAuthenticated, (req, res) => {
-  const { name, type, status } = req.body;
-  db.addMachine(name, type, status, (err) => {
+  const { name, type, model } = req.body;
+  db.addMachine(name, type, model, (err) => {
     if (err) {
       console.error("Error adding machine:", err);
       return res.status(500).send("Error adding machine");
@@ -158,22 +162,15 @@ app.post("/machines/delete/:id", isAuthenticated, (req, res) => {
 
 // Maintenance routes
 app.get("/maintenance", isAuthenticated, (req, res) => {
-  db.getAllMaintenanceRecords((err, maintenanceRecords) => {
-    console.log("Maintenance: ", maintenanceRecords);
+  db.getAllMaintenanceRecords((err, records) => {
     if (err) {
-      console.error("Maintenance records error:", err);
-      return res.status(500).send("Error retrieving records");
+      console.error("Error fetching maintenance records:", err);
+      return res.status(500).send("Error retrieving maintenance records");
     }
-    db.getAllMachines((err, machines) => {
-      if (err) {
-        console.error("Machines retrieval error:", err);
-        return res.status(500).send("Error retrieving machines");
-      }
-      res.render("maintenance", {
-        maintenanceRecords,
-        machines,
-        activePage: "maintenance",
-      });
+    res.render("maintenance", {
+      maintenanceRecords: records,
+      activePage: "maintenance",
+      role: req.session.role,
     });
   });
 });
@@ -185,18 +182,29 @@ app.get("/maintenance/new", isAuthenticated, (req, res) => {
       console.error("Machines retrieval error:", err);
       return res.status(500).send("Error retrieving machines");
     }
-    res.render("new_maintenance", { machines });
+
+    db.getAllTechnicians((err, users) => {
+      if (err) {
+        console.error("Technicians retrieval error:", err);
+        return res.status(500).send("Error retrieving technicians");
+      }
+
+      console.log("machines: ", machines);
+      console.log("users: ", users);
+
+      res.render("new_maintenance", { machines, users });
+    });
   });
 });
-
 // Handle maintenance form submission
 app.post("/maintenance/add", isAuthenticated, (req, res) => {
-  const { machine_id, date, description, performed_by } = req.body;
-  db.addMaintenance(machine_id, date, description, performed_by, (err) => {
+  const { machine_id, due_date, description, user_id } = req.body;
+  db.addMaintenance(machine_id, due_date, description, user_id, (err) => {
     if (err) {
       console.error("Error adding maintenance:", err);
       return res.status(500).send("Error adding maintenance record");
     }
+    console.log("Add maintenance success");
     res.redirect("/maintenance");
   });
 });
@@ -245,6 +253,45 @@ app.post("/maintenance/:id", isAuthenticated, (req, res) => {
       return res.status(500).send("Error deleting maintenance record");
     }
     res.redirect("/maintenance");
+  });
+});
+
+// Tasks routes
+app.get("/tasks", isAuthenticated, (req, res) => {
+  const userId = req.session.userId;
+  db.getTasksByUserId(userId, (err, tasks) => {
+    if (err) {
+      console.error("Tasks retrieval error:", err);
+      return res.status(500).send("Error retrieving tasks");
+    }
+    res.render("tasks", {
+      tasks: tasks,
+      user: req.session.user,
+      activePage: "tasks",
+      role: req.session.role,
+    });
+  });
+});
+
+// Edit the status of maintenance to Inprogress
+app.post("/tasks/edit/:id", isAuthenticated, (req, res) => {
+  db.updateMaintenanceStatus(req.params.id, "In Progress", (err) => {
+    if (err) {
+      console.error("Error updating maintenance:", err);
+      return res.status(500).send("Error updating maintenance record");
+    }
+    res.redirect("/tasks");
+  });
+});
+
+// Edit the status of maintenance to Done
+app.post("/tasks/done/:id", isAuthenticated, (req, res) => {
+  db.updateMaintenanceStatus(req.params.id, "Done", (err) => {
+    if (err) {
+      console.error("Error updating maintenance:", err);
+      return res.status(500).send("Error updating maintenance record");
+    }
+    res.redirect("/tasks");
   });
 });
 

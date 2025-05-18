@@ -23,7 +23,7 @@ db.run(`
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT,
     type TEXT,
-    status TEXT
+    model TEXT
   )
 `);
 
@@ -32,10 +32,12 @@ db.run(`
   CREATE TABLE IF NOT EXISTS maintenance (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     machine_id INTEGER,
-    date TEXT,
+    user_id INTEGER,
+    status TEXT,
+    due_date TEXT,
     description TEXT,
-    performed_by TEXT,
     FOREIGN KEY (machine_id) REFERENCES machines(id)
+    FOREIGN KEY (user_id) REFERENCES users(id)
   )
 `);
 
@@ -78,10 +80,10 @@ function getMachineById(id, callback) {
   db.get("SELECT * FROM machines WHERE id = ?", [id], callback);
 }
 
-function addMachine(name, type, status, callback) {
+function addMachine(name, type, model, callback) {
   db.run(
-    "INSERT INTO machines (name, type, status) VALUES (?, ?, ?)",
-    [name, type, status],
+    "INSERT INTO machines (name, type, model) VALUES (?, ?, ?)",
+    [name, type, model],
     callback
   );
 }
@@ -102,37 +104,67 @@ function deleteMachine(id, callback) {
 function getAllMaintenanceRecords(callback) {
   db.all(
     `
-    SELECT maintenance.*, machines.name AS machine_name
+    SELECT 
+      maintenance.*, 
+      machines.name AS machine_name,
+      users.first_name || ' ' || users.last_name AS performed_by
     FROM maintenance
     JOIN machines ON maintenance.machine_id = machines.id
-  `,
+    JOIN users ON maintenance.user_id = users.id
+    `,
     callback
   );
 }
 
-function addMaintenance(machine_id, date, description, performed_by, callback) {
+function addMaintenance(machine_id, due_date, description, user_id, callback) {
   db.run(
-    "INSERT INTO maintenance (machine_id, date, description, performed_by) VALUES (?, ?, ?, ?)",
-    [machine_id, date, description, performed_by],
+    "INSERT INTO maintenance (machine_id, due_date, description, user_id, status) VALUES (?, ?, ?, ?, ?)",
+    [machine_id, due_date, description, user_id, "Pending"],
     callback
   );
 }
+
 
 // get maintenance by id
 function getMaintenanceById(id, callback) {
   db.get("SELECT * FROM maintenance WHERE id = ?", [id], callback);
 }
 
-function updateMaintenance(id, machine_id, date, description, performed_by, callback) {
+function updateMaintenance(id, machine_id, date, description, user_id, callback) {
   db.run(
-    "UPDATE maintenance SET machine_id = ?, date = ?, description = ?, performed_by = ? WHERE id = ?",
-    [machine_id, date, description, performed_by, id],
+    "UPDATE maintenance SET machine_id = ?, date = ?, description = ?, user_id = ? WHERE id = ?",
+    [machine_id, date, description, user_id, id],
     callback
   );
 }
 
 function deleteMaintenance(id, callback) {
   db.run("DELETE FROM maintenance WHERE id = ?", [id], callback);
+}
+
+// DB requests related to tasks
+function getTasksByUserId(userId, callback) {
+  // get mentenances and include user with it using userId
+  db.all(
+    `
+    SELECT maintenance.*, machines.name AS machine_name, users.first_name, users.last_name
+    FROM maintenance
+    JOIN machines ON maintenance.machine_id = machines.id
+    JOIN users ON maintenance.user_id = users.id
+    WHERE maintenance.user_id = ?
+  `,
+    [userId],
+    callback
+  );
+}
+
+function getAllTechnicians(callback) {
+  db.all("SELECT * FROM users WHERE role = 'technician'", callback);
+}
+
+// update maintenance status
+function updateMaintenanceStatus(id, status, callback) {
+  db.run("UPDATE maintenance SET status = ? WHERE id = ?", [status, id], callback);
 }
 
 function closeDatabase() {
@@ -157,5 +189,8 @@ module.exports = {
   getMaintenanceById,
   updateMaintenance,
   deleteMaintenance,
+  getAllTechnicians,
+  getTasksByUserId,
+  updateMaintenanceStatus,
   closeDatabase,
 };

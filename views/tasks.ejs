@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>Maintenance Records</title>
+    <title>Task Management</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
@@ -98,64 +98,65 @@
     <%- include('partials/drawer') %>
     <div class="container">
       <div>
-        <h1 class="mb-4">🛠 Maintenance Records</h1>
+        <h1 class="mb-4">✅ Task Management</h1>
 
-        <% if (maintenanceRecords.length === 0) { %>
-        <div class="alert alert-warning">No maintenance records found.</div>
+        <% if (tasks && tasks.length === 0) { %>
+        <div class="alert alert-warning">You do not have tasks.</div>
         <% } else { %>
         <div class="table-responsive mb-4">
           <table class="table table-bordered table-hover">
             <thead class="table-light">
               <tr>
-                <th>Machine</th>
+                <th>Machine Name</th>
                 <th>Due Date</th>
                 <th>Status</th>
                 <th>Description</th>
-                <th>Performed By</th>
-                <th>Action</th>
+                <th>Actions</th>
               </tr>
             </thead>
             <tbody>
-              <% maintenanceRecords.forEach(record => { %>
+              <% tasks.forEach(record => { %>
               <tr>
                 <td><%= record.machine_name %></td>
                 <td><%= record.due_date %></td>
                 <td>
                   <% if (record.status.toLowerCase() === "pending") { %>
-                  <span class="badge bg-warning text-dark px-3 py-2"
-                    >Pending</span
-                  >
+                  <span class="badge bg-warning text-dark  px-3 py-2">Pending</span>
                   <% } else if (record.status.toLowerCase() === "in progress") {
                   %>
-                  <span class="badge bg-info text-dark px-3 py-2"
-                    >In Progress</span
-                  >
+                  <span class="badge bg-info text-dark  px-3 py-2">In Progress</span>
                   <% } else if (record.status.toLowerCase() === "done") { %>
-                  <span class="badge bg-success px-3 py-2">Done</span>
+                  <span class="badge bg-success  px-3 py-2">Done</span>
                   <% } else { %>
-                  <span class="badge bg-secondary px-3 py-2">Unknown</span>
+                  <span class="badge bg-secondary  px-3 py-2">Unknown</span>
                   <% } %>
                 </td>
                 <td><%= record.description %></td>
-                <td><%= record.performed_by %></td>
                 <td>
-                  <% if (record.status.toLowerCase() !== "done") { %>
-                  <a
-                    class="btn btn-sm btn-warning me-2"
-                    href="/maintenance/<%= record.id %>/edit"
-                  >
-                    Edit
-                  </a>
-                  <% } %>
+                  <% if (record.status === "pending" || record.status ===
+                  "Pending") { %>
                   <form
-                    action="/maintenance/<%= record.id %>"
+                    action="/tasks/edit/<%= record.id %>"
                     method="POST"
                     style="display: inline"
                   >
-                    <button class="btn btn-sm btn-danger" type="submit">
-                      Delete
+                    <button type="submit" class="btn btn-sm btn-success me-2">
+                      Start
                     </button>
                   </form>
+                  <% } else if (record.status === "In Progress") { %>
+                  <form
+                    action="/tasks/done/<%= record.id %>"
+                    method="POST"
+                    style="display: inline"
+                  >
+                    <button type="submit" class="btn btn-sm btn-success me-2">
+                      Complete
+                    </button>
+                  </form>
+                  <% } else { %>
+                  <span class="text-muted">No actions</span>
+                  <% } %>
                 </td>
               </tr>
               <% }) %>
@@ -165,13 +166,9 @@
         <% } %>
       </div>
 
-      <!-- Buttons moved below -->
       <div class="bottom-buttons">
         <a href="/home" class="back-home-btn">
           <i class="fas fa-arrow-left"></i> Back to Dashboard
-        </a>
-        <a href="/maintenance/new" class="btn btn-primary add-btn">
-          <i class="fas fa-plus"></i> Add Maintenance
         </a>
       </div>
     </div>
