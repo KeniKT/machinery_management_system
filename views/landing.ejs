@@ -5,140 +5,263 @@
   <title>Welcome | Machinery Management</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
-  <link
-    rel="stylesheet"
-    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
-  />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
   <style>
-    html,
-    body {
+    :root {
+      --primary-color: #4361ee;
+      --secondary-color: #3a0ca3;
+      --accent-color: #4cc9f0;
+      --dark-color: #1a1a2e;
+      --light-color: #f8f9fa;
+    }
+    
+    html, body {
       height: 100%;
       margin: 0;
       padding: 0;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background-color: #1b3c6b;
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, var(--dark-color), var(--secondary-color));
+      color: var(--light-color);
+      overflow-x: hidden;
     }
 
-    .split-container {
+    .container-wrapper {
+      min-height: 100vh;
       display: flex;
-      height: 100vh;
+      flex-direction: column;
+      position: relative;
       overflow: hidden;
     }
 
-    .left-side {
-      flex: 1;
-      background: url('/images/bannner.png') center center no-repeat;
-      background-size: contain;
-      background-repeat: no-repeat;
-      background-position: center;
-      background-color: #1b3c6b;
+    /* Animated background elements */
+    .bg-circle {
+      position: absolute;
+      border-radius: 50%;
+      background: rgba(76, 201, 240, 0.1);
+      z-index: 0;
     }
 
-    .right-side {
+    .circle-1 {
+      width: 600px;
+      height: 600px;
+      top: -300px;
+      right: -300px;
+      animation: float 12s ease-in-out infinite;
+    }
+
+    .circle-2 {
+      width: 400px;
+      height: 400px;
+      bottom: -200px;
+      left: -200px;
+      animation: float 8s ease-in-out infinite reverse;
+    }
+
+    @keyframes float {
+      0%, 100% {
+        transform: translateY(0) rotate(0deg);
+      }
+      50% {
+        transform: translateY(-20px) rotate(5deg);
+      }
+    }
+
+    /* Header styles */
+    .login-btns {
+      position: absolute;
+      top: 30px;
+      right: 40px;
+      display: flex;
+      gap: 15px;
+      z-index: 100;
+    }
+
+    .login-btn {
+      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+      color: white;
+      font-weight: 600;
+      padding: 12px 28px;
+      border: none;
+      border-radius: 50px;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(67, 97, 238, 0.4);
+      display: inline-block;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      z-index: 1;
+    }
+
+    .login-btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
+      z-index: -1;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .login-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 20px rgba(67, 97, 238, 0.6);
+    }
+
+    .login-btn:hover::before {
+      opacity: 1;
+    }
+
+    /* Main content styles */
+    .main-content {
       flex: 1;
-      background: linear-gradient(135deg, #1b3c6b, #305c9d);
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
       padding: 40px;
-      color: white;
       position: relative;
-    }
-
-    .right-box {
-      background: transparent;
-      padding: 0;
-      border-radius: 0;
-      width: 100%;
-      max-width: 100%;
-      animation: fadeIn 1s ease-out;
-    }
-
-    .right-box h1 {
-      font-size: 2.8rem;
-      font-weight: 700;
-      margin-bottom: 20px;
-    }
-
-    .right-box p {
-      font-size: 1.15rem;
-      line-height: 1.7;
-      margin-bottom: 25px;
-    }
-
-    .feature-list {
-      list-style: none;
-      padding: 0;
-      margin-bottom: 30px;
-    }
-
-    .feature-list li {
-      margin-bottom: 12px;
-      font-size: 1.05rem;
-    }
-
-    .feature-list li::before {
-      content: '✔';
-      margin-right: 10px;
-      color: #00d1b2;
-    }
-
-    .ready-msg {
-      margin-top: 40px;
-      font-size: 1.3rem;
-      font-weight: 500;
-      color: #f0f3f7;
-      background: rgba(255, 255, 255, 0.08);
-      padding: 18px 24px;
-      border-left: 6px solid #00d1b2;
-      border-radius: 8px;
-      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
-      max-width: 100%;
-      width: 100%;
-    }
-
-    .ready-msg strong {
-      display: block;
-      font-size: 1.4rem;
-      color: #ffffff;
-      margin-bottom: 5px;
-    }
-
-    /* Updated login buttons container */
-    .login-btns {
-      position: absolute;
-      top: 20px;
-      right: 30px;
-      display: flex;
-      gap: 12px;
       z-index: 10;
+      max-width: 1200px;
+      margin: 0 auto;
+      width: 100%;
     }
 
-    .login-btn {
-      background: #0d6efd;
+    .hero-section {
+      text-align: center;
+      margin-bottom: 60px;
+      animation: fadeInUp 1s ease-out;
+    }
+
+    .hero-section h1 {
+      font-size: 3.5rem;
+      font-weight: 700;
+      margin-bottom: 25px;
+      background: linear-gradient(90deg, var(--accent-color), #ffffff);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      line-height: 1.2;
+    }
+
+    .hero-section p {
+      font-size: 1.25rem;
+      line-height: 1.7;
+      margin-bottom: 35px;
+      max-width: 700px;
+      margin-left: auto;
+      margin-right: auto;
+      opacity: 0.9;
+    }
+
+    .feature-section {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 30px;
+      width: 100%;
+      margin-bottom: 60px;
+    }
+
+    .feature-card {
+      background: rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(10px);
+      border-radius: 16px;
+      padding: 30px;
+      transition: all 0.3s ease;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+    }
+
+    .feature-card:hover {
+      transform: translateY(-10px);
+      background: rgba(255, 255, 255, 0.12);
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+    }
+
+    .feature-card h3 {
+      font-size: 1.5rem;
+      margin-bottom: 15px;
+      color: var(--accent-color);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .feature-card h3 i {
+      font-size: 1.8rem;
+    }
+
+    .feature-card p {
+      opacity: 0.8;
+      line-height: 1.6;
+    }
+
+    .cta-section {
+      text-align: center;
+      animation: fadeIn 1.5s ease-out;
+    }
+
+    .cta-box {
+      background: linear-gradient(135deg, rgba(67, 97, 238, 0.2), rgba(58, 12, 163, 0.2));
+      border-radius: 16px;
+      padding: 30px 40px;
+      border: 1px solid rgba(76, 201, 240, 0.3);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .cta-box h2 {
+      font-size: 2rem;
+      margin-bottom: 15px;
       color: white;
+    }
+
+    .cta-box p {
+      font-size: 1.1rem;
+      margin-bottom: 25px;
+      opacity: 0.9;
+    }
+
+    .cta-btn {
+      background: linear-gradient(135deg, var(--accent-color), #4895ef);
+      color: var(--dark-color);
       font-weight: 600;
-      padding: 10px 24px;
+      padding: 15px 35px;
       border: none;
-      border-radius: 8px;
+      border-radius: 50px;
       text-decoration: none;
       transition: all 0.3s ease;
-      box-shadow: 0 4px 12px rgba(13, 110, 253, 0.4);
+      box-shadow: 0 4px 15px rgba(76, 201, 240, 0.4);
       display: inline-block;
-      text-align: center;
+      font-size: 1.1rem;
     }
 
-    .login-btn:hover {
-      background-color: #0b5ed7;
-      box-shadow: 0 4px 12px rgba(13, 110, 253, 0.5);
+    .cta-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 25px rgba(76, 201, 240, 0.6);
+      color: var(--dark-color);
     }
 
+    /* Animations */
     @keyframes fadeIn {
       from {
         opacity: 0;
-        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+      }
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
       }
       to {
         opacity: 1;
@@ -146,77 +269,125 @@
       }
     }
 
+    /* Responsive styles */
+    @media (max-width: 992px) {
+      .hero-section h1 {
+        font-size: 2.8rem;
+      }
+      
+      .hero-section p {
+        font-size: 1.1rem;
+      }
+    }
+
     @media (max-width: 768px) {
-      .split-container {
-        flex-direction: column;
+      .login-btns {
+        top: 20px;
+        right: 20px;
       }
-
-      .left-side,
-      .right-side {
-        flex: none;
-        height: auto;
-        padding: 30px 20px;
+      
+      .login-btn {
+        padding: 10px 20px;
+        font-size: 0.9rem;
       }
-
-      .right-side {
-        align-items: center;
-        text-align: center;
+      
+      .main-content {
+        padding: 20px;
       }
-
-      .right-box {
-        margin: 0 auto;
-        padding: 0;
+      
+      .hero-section h1 {
+        font-size: 2.2rem;
       }
-
-      .ready-msg {
-        max-width: 100%;
+      
+      .feature-section {
+        grid-template-columns: 1fr;
       }
+      
+      .cta-box {
+        padding: 20px;
+      }
+      
+      .cta-box h2 {
+        font-size: 1.5rem;
+      }
+    }
 
+    @media (max-width: 576px) {
+      .hero-section h1 {
+        font-size: 1.8rem;
+      }
+      
       .login-btns {
         top: 15px;
         right: 15px;
-        gap: 8px;
-      }
-
-      .login-btn {
-        padding: 8px 16px;
+        gap: 10px;
       }
     }
   </style>
 </head>
 <body>
-  <!-- 🔐 Updated Login Buttons -->
-  <div class="login-btns">
-    <a href="/login" class="login-btn">Login</a>
-  </div>
+  <div class="container-wrapper">
+    <!-- Animated background elements -->
+    <div class="bg-circle circle-1"></div>
+    <div class="bg-circle circle-2"></div>
+    
+    <!-- Login button -->
+    <div class="login-btns">
+      <a href="/login" class="login-btn">Login</a>
+    </div>
 
-  <div class="split-container">
-    <!-- 📸 Left Side: Image -->
-    <div class="left-side"></div>
-
-    <!-- 📄 Right Side: Content -->
-    <div class="right-side">
-      <div class="right-box">
-        <h1>Welcome to the Machinery Management System</h1>
+    <!-- Main content -->
+    <div class="main-content">
+      <section class="hero-section">
+        <h1>Revolutionize Your Machinery Management</h1>
         <p>
-          Effortless tracking. Seamless maintenance. Smarter decisions.<br />
-          This system is designed to help you manage and monitor your machinery like never
-          before — intuitive, efficient, and centralized.
+          The ultimate solution for tracking, maintaining, and optimizing your equipment portfolio. 
+          Streamline operations, reduce downtime, and make data-driven decisions with our intuitive platform.
         </p>
-        <ul class="feature-list">
-          <li>Inventory Tracking</li>
-          <li>Maintenance Logging</li>
-          <li>Performance Monitoring</li>
-          <li>Operator Logs</li>
-          <li>Document Management</li>
-          <li>Smart Alerts & Notifications</li>
-        </ul>
-      </div>
+      </section>
 
-      <div class="ready-msg">
-        <strong>Ready to Get Started?</strong>
-        Click "Login" to access your dashboard and take control of your equipment workflow.
-      </div>
+      <section class="feature-section">
+        <div class="feature-card">
+          <h3><i class="fas fa-clipboard-list"></i> Inventory Tracking</h3>
+          <p>Real-time visibility of all your machinery assets with detailed specifications and location tracking.</p>
+        </div>
+        
+        <div class="feature-card">
+          <h3><i class="fas fa-tools"></i> Maintenance Logging</h3>
+          <p>Schedule, track, and analyze maintenance activities to maximize equipment lifespan and performance.</p>
+        </div>
+        
+        <div class="feature-card">
+          <h3><i class="fas fa-chart-line"></i> Performance Monitoring</h3>
+          <p>Comprehensive analytics and reporting to identify trends and optimize equipment utilization.</p>
+        </div>
+        
+        <div class="feature-card">
+          <h3><i class="fas fa-user-hard-hat"></i> Operator Management</h3>
+          <p>Track operator assignments, certifications, and equipment-specific training requirements.</p>
+        </div>
+        
+        <div class="feature-card">
+          <h3><i class="fas fa-file-contract"></i> Document Management</h3>
+          <p>Centralized storage for manuals, warranties, service records, and compliance documentation.</p>
+        </div>
+        
+        <div class="feature-card">
+          <h3><i class="fas fa-bell"></i> Smart Alerts</h3>
+          <p>Automated notifications for maintenance schedules, inspections, and critical issues.</p>
+        </div>
+      </section>
+
+      <section class="cta-section">
+        <div class="cta-box">
+          <h2>Ready to Transform Your Operations?</h2>
+          <p>
+            Join industry leaders who trust our platform to manage their valuable equipment assets. 
+            Get started today and experience the difference of intelligent machinery management.
+          </p>
+          <a href="/login" class="cta-btn">Access Your Dashboard Now</a>
+        </div>
+      </section>
     </div>
   </div>
 </body>
