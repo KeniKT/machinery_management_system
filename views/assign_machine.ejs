@@ -4,58 +4,131 @@
   <title>Assign Machine</title>
   <link rel="stylesheet" href="/styles.css">
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      max-width: 600px;
-      margin: 40px auto;
-      padding: 20px;
-      background-color: #f9f9f9;
-      border-radius: 8px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  :root {
+    --primary: #1b3c6b;
+    --primary-dark: #0f2847;
+    --accent: #5c7cfa;
+    --accent-dark: #445ee2;
+    --white: #ffffff;
+    --gray-light: #e4e9f0;
+    --gray-border: #cfd8e3;
+    --text-dark: #1e2a38;
+  }
+
+  body {
+    background: linear-gradient(to bottom right, var(--primary), var(--primary-dark));
+    color: var(--white);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    min-height: 100vh;
+    margin: 0;
+    padding: 2rem 1rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  form {
+    background: var(--white);
+    color: var(--text-dark);
+    padding: 2.5rem 2rem;
+    border-radius: 16px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
+    max-width: 480px;
+    width: 100%;
+  }
+
+  h1 {
+    text-align: center;
+    color: var(--primary);
+    font-weight: 700;
+    font-size: 1.8rem;
+    margin-bottom: 2rem;
+    position: relative;
+  }
+
+  h1::after {
+    content: '';
+    position: absolute;
+    bottom: -12px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 50px;
+    height: 4px;
+    background: linear-gradient(90deg, var(--accent), var(--accent-dark));
+    border-radius: 2px;
+  }
+
+  label {
+    display: block;
+    margin-top: 1.5rem;
+    font-weight: 600;
+    color: var(--primary-dark);
+  }
+
+  select {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    margin-top: 0.5rem;
+    border: 1.5px solid var(--gray-border);
+    border-radius: 12px;
+    font-size: 1rem;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  select:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 6px rgba(92, 124, 250, 0.5);
+    outline: none;
+  }
+
+  button {
+    margin-top: 2.5rem;
+    width: 100%;
+    background: linear-gradient(90deg, var(--accent), var(--accent-dark));
+    border: none;
+    border-radius: 12px;
+    color: var(--white);
+    font-size: 1.1rem;
+    font-weight: 600;
+    padding: 0.75rem 1rem;
+    cursor: pointer;
+    transition: background 0.3s ease, transform 0.2s ease;
+    box-shadow: 0 8px 15px rgba(92, 124, 250, 0.4);
+  }
+
+  button:hover {
+    background: linear-gradient(90deg, var(--accent-dark), var(--accent));
+    transform: translateY(-3px);
+    box-shadow: 0 12px 25px rgba(92, 124, 250, 0.6);
+  }
+
+  a {
+    display: block;
+    margin-top: 1.8rem;
+    text-align: center;
+    color: var(--accent);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.95rem;
+    transition: color 0.3s ease;
+  }
+
+  a:hover {
+    color: var(--accent-dark);
+    text-decoration: underline;
+  }
+
+  @media (max-width: 480px) {
+    form {
+      padding: 2rem 1.5rem;
     }
 
     h1 {
-      text-align: center;
-      margin-bottom: 30px;
+      font-size: 1.5rem;
     }
+  }
+</style>
 
-    label {
-      display: block;
-      margin-top: 20px;
-      font-weight: bold;
-    }
-
-    select, button {
-      width: 100%;
-      padding: 10px;
-      margin-top: 8px;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-    }
-
-    button {
-      background-color: #007BFF;
-      color: white;
-      cursor: pointer;
-      margin-top: 30px;
-    }
-
-    button:hover {
-      background-color: #0056b3;
-    }
-
-    a {
-      display: block;
-      margin-top: 20px;
-      text-align: center;
-      color: #007BFF;
-      text-decoration: none;
-    }
-
-    a:hover {
-      text-decoration: underline;
-    }
-  </style>
 </head>
 <body>
   <h1>Assign Machine to Technician</h1>

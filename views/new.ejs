@@ -13,62 +13,101 @@
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
     />
 
-    <style>
-      body {
-        background: linear-gradient(to bottom right, #1e2a38, #2d3e50);
-        min-height: 100vh;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        color: #ffffff;
-      }
+   <style>
+    body {
+      background: linear-gradient(135deg, #1a2a3a, #2c3e50);
+      color: #ecf0f1;
+      min-height: 100vh;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
 
+    .container {
+      background-color: rgba(255, 255, 255, 0.95);
+      color: #2c3e50;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+      width: 100%;
+      max-width: 600px;
+    }
+
+    h1 {
+      color: #2980b9;
+      font-weight: 600;
+      margin-bottom: 25px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid #eee;
+      text-align: center;
+      font-size: 2rem;
+    }
+
+    .form-label {
+      font-weight: 600;
+      color: #2c3e50;
+      margin-top: 10px;
+    }
+
+    .form-control, .form-select {
+      border: 1px solid #ced4da;
+      border-radius: 5px;
+      padding: 10px;
+      background-color: #f8f9fa;
+    }
+
+    .form-control:focus, .form-select:focus {
+      border-color: #2980b9;
+      box-shadow: 0 0 0 0.25rem rgba(41, 128, 185, 0.25);
+      background-color: #fff;
+    }
+
+    .btn-primary {
+      background-color: #2980b9;
+      border: none;
+      padding: 10px;
+      font-weight: 500;
+      transition: all 0.3s;
+      width: 100%;
+      margin-bottom: 10px;
+    }
+
+    .btn-primary:hover {
+      background-color: #3498db;
+      transform: translateY(-2px);
+    }
+
+    .btn-secondary {
+      background-color: #7f8c8d;
+      border: none;
+      padding: 10px;
+      font-weight: 500;
+      transition: all 0.3s;
+      width: 100%;
+    }
+
+    .btn-secondary:hover {
+      background-color: #95a5a6;
+      transform: translateY(-2px);
+    }
+
+    .btn i {
+      margin-right: 8px;
+    }
+
+    @media (max-width: 576px) {
       .container {
-        background-color: #ffffff;
-        color: #000000;
-        padding: 40px;
-        border-radius: 12px;
-        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
-        width: 100%;
-        max-width: 600px;
+        padding: 20px;
       }
-
+      
       h1 {
-        color: #1b3c6b;
-        font-weight: bold;
-        font-size: 2rem;
-        margin-bottom: 30px;
-        text-align: center;
+        font-size: 1.6rem;
       }
+    }
+</style>
 
-      .form-label {
-        font-weight: 600;
-      }
-
-      .btn-primary {
-        background-color: #1b3c6b;
-        border: none;
-        width: 100%;
-      }
-
-      .btn-primary:hover {
-        background-color: #324a74;
-      }
-
-      .btn-secondary {
-        width: 100%;
-      }
-
-      @media (max-width: 576px) {
-        .container {
-          padding: 25px;
-        }
-
-        h1 {
-          font-size: 1.6rem;
-        }
-      }
-    </style>
   </head>
   <body>
     <div class="container">
